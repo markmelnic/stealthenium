@@ -1,20 +1,18 @@
-# stealthenium ![Python Versions](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue)
+# Stealthenium ![Python Versions](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)
 
-A python package to prevent selenium detection. This programme is trying to make python selenium more stealthy. As of now August 2024 stealthenium **only** supports Chrome and Remote WebDriver.
+**Stealthenium** is a Python package designed to prevent Selenium from being detected. Its primary goal is to enhance Selenium’s stealth capabilities ensuring smooth automation while bypassing detection systems. Currently, Stealthenium only supports **Chrome** and **Remote WebDriver**.
 
-This is a fork of [selenium-stealth ](https://github.com/diprajpatra/selenium-stealth) developed by [@diprajpatra](https://github.com/diprajpatra) and has came to be because it is no longer maintained (last commit November 5 2020 as of August 23 2024). It can be seen as a re-implementation of JavaScript [puppeteer-extra-plugin-stealth](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth) developed by [@berstend](https://github.com/berstend).
+This project is a fork of the now-unmaintained [selenium-stealth](https://github.com/diprajpatra/selenium-stealth) by [diprajpatra](https://github.com/diprajpatra), last updated on November 5 2020 as of August 23 2024. It serves as a Python equivalent of the JavaScript [puppeteer-extra-plugin-stealth](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth) developed by [berstend](https://github.com/berstend).
 
 ## Features
 
-- **passes all public bot tests.**
+- **Passes public bot detection tests.**
+- **Bypasses Cloudflare and other bot detection systems.**
+- **Maintains a reasonable reCAPTCHA v3 score.**
 
-- **bypass Cloudflare and other bot detection systems.**
+## Installation
 
-- **maintains reasonable reCAPTCHA v3 score**
-
-## Install
-
-stealthenium is available on PyPI you can install with pip.
+Stealthenium is available on PyPI. Install it via pip:
 
 ```
 $ pip install stealthenium
@@ -71,7 +69,7 @@ stealth(
 )
 ```
 
-## Test results (red - bad)
+## Test results (red = bad)
 
 Without <strong>stealthenium</strong>
 
@@ -93,4 +91,6 @@ With <strong>stealthenium</strong>
 
 ## License
 
-Copyright © 2024, [markmelnic](https://github.com/markmelnic/stealthenium). Released under the MIT License.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/markmelnic/stealthenium/blob/main/LICENSE) file for details.
+
+© 2024 [markmelnic](https://github.com/markmelnic)
