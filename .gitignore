@@ -112,3 +112,6 @@ venv.bak/
 .mypy_cache/
 
 .vscode
+
+chromedriver
+chromedriver.*

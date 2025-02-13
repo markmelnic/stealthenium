@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf8") as fh:
 
 setuptools.setup(
     name="stealthenium",
-    version="1.1.0",
+    version="1.1.1",
     author="Mark Melnic",
     author_email="markmelnic@gmail.com",
     description="A wrapper to make python selenium stealthy.",
