@@ -1,9 +1,7 @@
-from pathlib import Path
+from ._js_cache import load_js
 from .wrapper import evaluateOnNewDocument
-from selenium.webdriver import Chrome as Driver
+from selenium.webdriver.remote.webdriver import WebDriver
 
 
-def hairline_fix(driver: Driver, **kwargs) -> None:
-    evaluateOnNewDocument(
-        driver, Path(__file__).parent.joinpath("js/hairline.fix.js").read_text()
-    )
+def hairline_fix(driver: WebDriver, **kwargs) -> None:
+    evaluateOnNewDocument(driver, load_js("hairline.fix.js"))

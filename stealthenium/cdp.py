@@ -1,6 +1,8 @@
 from json import dumps
 
-def execute_cdp_cmd(driver, cmd, params={}):
+def execute_cdp_cmd(driver, cmd, params=None):
+    if params is None:
+        params = {}
     resource = "/session/%s/chromium/send_command_and_get_result" % driver.session_id
 
     if hasattr(driver.command_executor, '_url'):

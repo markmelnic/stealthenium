@@ -1,16 +1,20 @@
-import os, time, math, base64, pytest, imghdr
+import os
+import math
+import base64
+import pytest
+from pathlib import Path
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from stealthenium import stealth
+
 
 @pytest.fixture
 def browser_data():
     options = webdriver.ChromeOptions()
     options.add_argument("start-maximized")
     options.add_argument("--headless")
-
-    # option.add_argument("--no-sandbox")
-    # options.add_argument("--disable-gpu")
-    # options.addArguments("--disable-dev-shm-usage")
 
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option('useAutomationExtension', False)
@@ -25,31 +29,27 @@ def browser_data():
             fix_hairline=True,
             )
 
-    path = str(os.getcwd()).replace('\\', '/') + "/tests/static/test.html"
-    url = "https://bot.sannysoft.com/"
-    if os.name == 'nt':
-        url = 'file:///' + path
-    else:
-        url = 'file://' + path
-    print(url)
+    test_html = Path(__file__).parent / "static" / "test.html"
+    url = test_html.as_uri()
     driver.get(url)
-    time.sleep(10)
+
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, ".passed, .failed-text"))
+    )
 
     metrics = driver.execute_cdp_cmd('Page.getLayoutMetrics', {})
     width = math.ceil(metrics['contentSize']['width'])
     height = math.ceil(metrics['contentSize']['height'])
-    screenOrientation = dict(angle=0, type='portraitPrimary')
+    screen_orientation = dict(angle=0, type='portraitPrimary')
     driver.execute_cdp_cmd('Emulation.setDeviceMetricsOverride', {
         'mobile': False,
         'width': width,
         'height': height,
         'deviceScaleFactor': 1,
-        'screenOrientation': screenOrientation,
+        'screenOrientation': screen_orientation,
     })
     clip = dict(x=0, y=0, width=width, height=height, scale=1)
-    opt = {'format': 'png'}
-    if clip:
-        opt['clip'] = clip
+    opt = {'format': 'png', 'clip': clip}
 
     result = driver.execute_cdp_cmd('Page.captureScreenshot', opt)
     html = driver.page_source
@@ -58,19 +58,17 @@ def browser_data():
 
 
 def test_stealth_png(browser_data):
-    html, result = browser_data
+    _, result = browser_data
     buffer = base64.b64decode(result.get('data', b''))
+    # PNG files start with an 8-byte signature
+    assert buffer[:8] == b'\x89PNG\r\n\x1a\n'
 
-    assert imghdr.what('', buffer) == 'png'
 
-
-def test_stealth_faild(browser_data):
-    html, result = browser_data
-    html = str(html)
-    assert html.find("failed-text") == -1 and html.find('passed') >= 1
+def test_stealth_failed(browser_data):
+    html, _ = browser_data
+    assert "failed-text" not in html and "passed" in html
 
 
 def test_stealth_warn(browser_data):
-    html, result = browser_data
-    html = str(html)
-    assert html.find("warn") == -1 and html.find('passed') >= 1
+    html, _ = browser_data
+    assert "warn" not in html and "passed" in html
