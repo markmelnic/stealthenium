@@ -1,10 +1,12 @@
-from pathlib import Path
+from typing import List
+
+from ._js_cache import load_js
 from .wrapper import evaluateOnNewDocument
-from selenium.webdriver import Chrome as Driver
+from selenium.webdriver.remote.webdriver import WebDriver
 
 
-def navigator_languages(driver: Driver, languages: [str], **kwargs) -> None:
+def navigator_languages(driver: WebDriver, languages: List[str], **kwargs) -> None:
     evaluateOnNewDocument(
-        driver, Path(__file__).parent.joinpath("js/navigator.languages.js").read_text(),
+        driver, load_js("navigator.languages.js"),
         languages,
     )

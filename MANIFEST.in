@@ -1,1 +1,1 @@
-include selenium_stealth/js/*.js
+include stealthenium/js/*.js

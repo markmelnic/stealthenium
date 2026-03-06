@@ -1,7 +1,7 @@
-from stealthenium import stealth
-
-import math, base64
+import math
+import base64
 from selenium import webdriver
+from stealthenium import stealth
 
 options = webdriver.ChromeOptions()
 options.add_argument("start-maximized")
@@ -11,10 +11,7 @@ options.add_argument("start-maximized")
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option('useAutomationExtension', False)
 
-driver = webdriver.Chrome(
-    options=options,
-    service=webdriver.ChromeService("chromedriver.exe")
-)
+driver = webdriver.Chrome(options=options)
 
 stealth(
     driver,
@@ -33,18 +30,16 @@ driver.get(url)
 metrics = driver.execute_cdp_cmd('Page.getLayoutMetrics', {})
 width = math.ceil(metrics['contentSize']['width'])
 height = math.ceil(metrics['contentSize']['height'])
-screenOrientation = dict(angle=0, type='portraitPrimary')
+screen_orientation = dict(angle=0, type='portraitPrimary')
 driver.execute_cdp_cmd('Emulation.setDeviceMetricsOverride', {
     'mobile': False,
     'width': width,
     'height': height,
     'deviceScaleFactor': 1,
-    'screenOrientation': screenOrientation,
+    'screenOrientation': screen_orientation,
 })
 clip = dict(x=0, y=0, width=width, height=height, scale=1)
-opt = {'format': 'png'}
-if clip:
-    opt['clip'] = clip
+opt = {'format': 'png', 'clip': clip}
 
 result = driver.execute_cdp_cmd('Page.captureScreenshot', opt)
 buffer = base64.b64decode(result.get('data', b''))

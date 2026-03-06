@@ -1,6 +1,10 @@
-from selenium.webdriver import Firefox as Driver
+from typing import List, Optional
+
+from selenium.webdriver.remote.webdriver import WebDriver
 
 from .chrome_app import chrome_app
+from .chrome_csi import chrome_csi
+from .chrome_load_times import chrome_load_times
 from .chrome_runtime import chrome_runtime
 from .iframe_content_window import iframe_content_window
 from .media_codecs import media_codecs
@@ -15,36 +19,29 @@ from .webgl_vendor import webgl_vendor_override
 from .window_outerdimensions import window_outerdimensions
 from .hairline_fix import hairline_fix
 
-"""
-If user_agent = None then stealthenium only remove the 'headless' from userAgent
-    Here is an example of args:
-        user_agent: str = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36',
-        languages: [str] = ["en-US", "en"],
+
+def stealth(
+        driver: WebDriver,
+        user_agent: Optional[str] = None,
+        languages: Optional[List[str]] = None,
         vendor: str = "Google Inc.",
-        platform: str = "Win32",
+        platform: Optional[str] = None,
         webgl_vendor: str = "Intel Inc.",
         renderer: str = "Intel Iris OpenGL Engine",
         fix_hairline: bool = False,
         run_on_insecure_origins: bool = False,
-"""
-
-
-def stealth(
-        driver: Driver,
-        user_agent: str = None,
-        languages: [str] = ["en-US", "en"],
-        vendor: str = "Google Inc.",
-        platform: str = None,
-        webgl_vendor: str = "Intel Inc.",
-        renderer: str = "Intel Iris OpenGL Engine",
-        fix_hairline: bool = False,
-        run_on_insecure_origins: bool = False, **kwargs
+        **kwargs,
     ) -> None:
+
+    if languages is None:
+        languages = ["en-US", "en"]
 
     ua_languages = ','.join(languages)
 
     with_utils(driver, **kwargs)
     chrome_app(driver, **kwargs)
+    chrome_csi(driver, **kwargs)
+    chrome_load_times(driver, **kwargs)
     chrome_runtime(driver, run_on_insecure_origins, **kwargs)
     iframe_content_window(driver, **kwargs)
     media_codecs(driver, **kwargs)

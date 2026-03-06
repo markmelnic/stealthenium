@@ -1,12 +1,14 @@
 from .cdp import execute_cdp_cmd
 
-from selenium.webdriver import Chrome as Driver
+from typing import Optional
+from selenium.webdriver.remote.webdriver import WebDriver
+
 
 def user_agent_override(
-        driver: Driver,
-        user_agent: str = None,
-        language: str = None,
-        platform: str = None,
+        driver: WebDriver,
+        user_agent: Optional[str] = None,
+        language: Optional[str] = None,
+        platform: Optional[str] = None,
         **kwargs
 ) -> None:
     if user_agent is None:
@@ -14,14 +16,10 @@ def user_agent_override(
     else:
         ua = user_agent
     ua = ua.replace("HeadlessChrome", "Chrome")  # hide headless nature
-    override = {}
-    if language and platform:
-        override = {"userAgent": ua, "acceptLanguage": language, "platform": platform}
-    elif not language and platform:
-        override = {"userAgent": ua, "acceptLanguage": language, "platform": platform}
-    elif language and not platform:
-        override = {"userAgent": ua, "acceptLanguage": language, "platform": platform}
-    else:
-        override = {"userAgent": ua}
+    override = {"userAgent": ua}
+    if language:
+        override["acceptLanguage"] = language
+    if platform:
+        override["platform"] = platform
 
     execute_cdp_cmd(driver, 'Network.setUserAgentOverride', override)

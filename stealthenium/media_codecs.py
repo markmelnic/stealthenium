@@ -1,9 +1,7 @@
-from pathlib import Path
+from ._js_cache import load_js
 from .wrapper import evaluateOnNewDocument
-from selenium.webdriver import Chrome as Driver
+from selenium.webdriver.remote.webdriver import WebDriver
 
 
-def media_codecs(driver: Driver, **kwargs) -> None:
-    evaluateOnNewDocument(
-        driver, Path(__file__).parent.joinpath("js/media.codecs.js").read_text()
-    )
+def media_codecs(driver: WebDriver, **kwargs) -> None:
+    evaluateOnNewDocument(driver, load_js("media.codecs.js"))
